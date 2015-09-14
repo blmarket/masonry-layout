@@ -1,0 +1,90 @@
+<!-- Imports polymer -->
+<link rel="import" href="../polymer/polymer.html">
+
+<!-- Defines element markup -->
+<dom-module id="masonry-layout">
+<style>
+  #contents > ::content .grid-item {
+    margin-bottom: 10px;
+  }
+</style>
+<template>
+  <!-- can place header here <div>header</div> -->
+  <div id="contents">
+    <!-- child elements are rendered in content tag -->
+    <content></content>
+  </div>
+  <!-- can place footer here <div>footer</div> -->
+</template>
+</dom-module>
+
+<!-- vanilla JS dependencies -->
+<script>
+  // Workaround for electron.
+  if (typeof module !== 'undefined') {
+    __module = module;
+    module = undefined;
+  }
+</script>
+<script src="../masonry/dist/masonry.pkgd.js"></script>
+<script>
+  if (typeof __module !== 'undefined') {
+    module = __module;
+    delete __module;
+  }
+</script>
+
+<!-- Registers custom element -->
+<script>
+(function() {
+  var msnry;
+
+  Polymer({
+    is: 'masonry-layout',
+
+    properties: {
+      columnWidth: {
+        type: Number,
+        value: 300
+      }
+    },
+
+    // Fires when an instance of the element is created
+    created: function() {},
+
+    // Fires when the local DOM has been fully prepared
+    ready: function() {
+      var grids = this.$.contents;
+      msnry = new Masonry(grids, {
+        itemSelector: '.grid-item',
+        gutter: 10,
+        columnWidth: this.columnWidth
+      });
+    },
+
+    // Fires when the element was inserted into the document
+    attached: function() {
+      this.async(function() {
+        var self = this;
+        var ob = new MutationObserver(function(muts) {
+          for(var i in muts) {
+            var mut = muts[i];
+            if (mut.type !== 'childList') continue;
+            for(var j=0;j<mut.addedNodes.length;j++) {
+              // item will be appended regardless of position. to fix this, we should use reloadItems().
+              msnry.addItems(mut.addedNodes[j]);
+            }
+            for(var j=0;j<mut.removedNodes.length;j++) {
+              // I know it's crappy.
+              msnry.reloadItems();
+            }
+          }
+          msnry.layout();
+        });
+
+        ob.observe(this.$.contents, { childList: true });
+      });
+    }
+  });
+})();
+</script>

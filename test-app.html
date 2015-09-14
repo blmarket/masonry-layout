@@ -1,0 +1,65 @@
+<!-- Imports polymer -->
+<link rel="import" href="masonry-layout.html">
+
+<!-- Defines element markup -->
+<dom-module id="test-app">
+<style>
+  .grid-item {
+    background: #DDD;
+    width: 150px;
+  }
+</style>
+<template>
+  <input type="text" value="{{width}}" />
+  <masonry-layout id="grids" column-width="[[width]]">
+    <div class="grid-item"><span>grid-item1</span></div>
+    <div class="grid-item"><span>grid-item1</span></div>
+    <div class="grid-item"><span>grid-item1</span></div>
+    <div class="grid-item"><span>grid-item1</span></div>
+    <div class="grid-item"><span>grid-item1</span></div>
+    <div class="grid-item"><span>grid-item1</span></div>
+    <div class="grid-item"><span>grid-item1</span></div>
+    <div class="grid-item"><span>grid-item1</span></div>
+    <div class="grid-item"><span>grid-item1</span></div>
+    <div class="grid-item"><span>grid-item1</span></div>
+  </masonry-layout>
+</template>
+</dom-module>
+
+<!-- Registers custom element -->
+<script>
+Polymer({
+  is: 'test-app',
+  properties: {
+    width: {
+      type: Number,
+      notify: true,
+      value: 150,
+    }
+  },
+  ready: function() {
+  },
+  attached: function() {
+    this.async(function() {
+      var el;
+      for(var i=0;i<10;i++) {
+        el = document.createElement('div');
+        el.innerText = el.textContent = 'hi2';
+        el.style.height = (i+1) * 50 + 'px';
+        el.className = "col-4 grid-item";
+        Polymer.dom(this.$.grids).appendChild(el);
+      }
+
+      function fn() {
+        el = document.createElement('div');
+        el.innerText = el.textContent = 'hi2';
+        el.style.height = Math.floor(Math.random() * 350) + 'px';
+        el.className = "col-4 grid-item";
+        Polymer.dom(this.$.grids).appendChild(el);
+      }
+
+      this.async(fn, null, 5000);
+    });
+  }
+});
+</script>

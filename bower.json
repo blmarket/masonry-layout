@@ -19,6 +19,7 @@
     "test",
     "tests"
   ],
+  "main": "masonry-layout.html",
   "dependencies": {
     "webcomponentsjs": "~0.7.12",
     "polymer": "~1.1.3",

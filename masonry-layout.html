@@ -69,17 +69,12 @@
         var ob = new MutationObserver(function(muts) {
           for(var i in muts) {
             var mut = muts[i];
-            if (mut.type !== 'childList') continue;
-            for(var j=0;j<mut.addedNodes.length;j++) {
-              // item will be appended regardless of position. to fix this, we should use reloadItems().
-              msnry.addItems(mut.addedNodes[j]);
-            }
-            for(var j=0;j<mut.removedNodes.length;j++) {
-              // I know it's crappy.
+            if (mut.type === 'childList') {
               msnry.reloadItems();
+              msnry.layout();
+              return;
             }
           }
-          msnry.layout();
         });
 
         ob.observe(this.$.contents, { childList: true });

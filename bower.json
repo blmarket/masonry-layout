@@ -22,7 +22,7 @@
   "main": "masonry-layout.html",
   "dependencies": {
     "webcomponentsjs": "~0.7.12",
-    "polymer": "~1.1.3",
+    "polymer": "^1.2.3",
     "masonry": "~3.3.2"
   },
   "devDependencies": {
